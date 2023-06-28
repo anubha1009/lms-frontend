@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">{{role | titlecase}} - {{userEmaills}}</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <button class="btn btn-primary" (click)="navigateHome()">Home</button>
+      <a class="navbar-brand cursor-p" (click)="logout()">Logout</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+    </div>
+</nav>
+
+<form (ngSubmit)="addUser()" style="padding:2rem; margin:1em" class="container-box">
+    <label style="font-weight: bold;font-size: x-large;"> Create User</label>
+    <div class="form-group">
+      <label for="userEmail">User Email</label>
+      <input type="text" class="form-control" id="userEmail" required [(ngModel)]="userEmail" name="userEmail">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" required [(ngModel)]="password" name="password">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Add User</button>
+  </form>
+
+<div class="d-flex align-items-center container-box" style="padding:2rem; margin:1em" *ngIf="allUsers?.length>0">
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">User Email</th>
+          <th scope="col">Books Issued</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of allUsers, let i=index">
+          <td>{{ user.userEmail }}</td>
+          <td>{{ user.booksIssued }}</td>
+          <td>  
+            <button type="button" class="btn btn-primary" (click)="isEditButtonClicked(i)"
+              style="margin-right:2rem">Edit</button>
+            <button type="button" class="btn btn-danger" (click)=deleteUser(user.userEmail)>Delete</button>
+            <form *ngIf="user?.isEdit" (ngSubmit)="updateUser(user)">
+              <div class="form-group">
+                <label for="bookName">User Email</label>
+                <input type="text" class="form-control" id="bookName" required [(ngModel)]="user.userEmail"
+                  name="bookName" readonly>
+              </div>
+              <div class="form-group">
+                <label for="authorName">Password</label>
+                <input type="password" class="form-control" id="authorName" required [(ngModel)]="user.password"
+                  name="authorName">
+              </div>
+              
+              <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

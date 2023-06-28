@@ -1,0 +1,144 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">{{role | titlecase}} - {{userEmail}}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <button class="btn btn-primary" (click)="navigateHome()">Home</button>
+    <a class="navbar-brand cursor-p" (click)="logout()">Logout</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+  </div>
+</nav>
+
+<form (ngSubmit)="addBook()" style="padding:2rem; margin:1em" class="container-box">
+  <label style="font-weight: bold;font-size: x-large;"> Add Book</label>
+  <div class="form-group">
+    <label for="bookName">Book Name</label>
+    <input type="text" class="form-control" id="bookName" required [(ngModel)]="bookName" name="bookName">
+  </div>
+  <div class="form-group">
+    <label for="authorName">Author Name</label>
+    <input type="text" class="form-control" id="authorName" required [(ngModel)]="authorName" name="authorName">
+  </div>
+  <div class="form-group d-flex align-items-center">
+    <label>Issued</label>
+    <div class="form-check">
+      <input class="form-check-input" style="margin-left:2rem" type="radio" name="issued" id="issuedYes"
+        [checked]="issued" value="true" (click)="checkAddIssued(true)">
+      <label class="form-check-label" for="issuedYes">Yes</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" style="margin-left:2rem" type="radio" name="issued" id="issuedNo"
+        [checked]="!issued" value="false" (click)="checkAddIssued(false)">
+      <label class="form-check-label" for="issuedNo">No</label>
+    </div>
+  </div>
+  <div class="form-group" *ngIf="issued">
+    <label for="issuedTo">Issued To</label>
+    <input type="text" class="form-control" id="issuedTo" required [(ngModel)]="issuedTo" name="issuedTo">
+  </div>
+  <button type="submit" class="btn btn-primary">Add Book</button>
+</form>
+
+<div class="d-flex align-items-center container-box" style="padding:2rem; margin:1em">
+  <label style="font-weight: bold;font-size: x-large;"> Delete Book by ID</label>
+  <input type="number" [(ngModel)]="deleteSearchText" placeholder="Delete by ID" class="form-control"
+    style="max-width:25rem;margin-inline: 2rem;">
+  <button type="Delete by ID" (click)=deleteBook(deleteSearchText) class="btn btn-danger">Delete</button>
+</div>
+<div class="d-flex align-items-center container-box" style="padding:2rem; margin:1em">
+  <label style="font-weight: bold;font-size: x-large;"> Search Book By Id</label>
+  <input type="number" [(ngModel)]="searchText" placeholder="Search by ID" class="form-control "
+    style="max-width:25rem;margin-inline: 2rem;">
+  <button type="Book by ID" (click)=getBookById(searchText) class="btn btn-primary">Search</button>
+
+</div>
+<div *ngIf="isSearchClicked" class="d-flex align-items-center container-box" style="padding:2rem; margin:1em">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Book Name</th>
+        <th scope="col">Author Name</th>
+        <th scope="col">Issued</th>
+        <th scope="col">Issued To</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ searchedBook.bookName }}</td>
+        <td>{{ searchedBook.authorName }}</td>
+        <td>{{ searchedBook.issued }}</td>
+        <td>{{ searchedBook.issuedTo }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- <div class="d-flex align-items-center container-box" style="padding:2rem; margin:1em">
+  <button type="All Books" (click)=getAllBooks() class="btn btn-primary">All Books</button>
+</div> -->
+<div class="d-flex align-items-center container-box" style="padding:2rem; margin:1em" *ngIf="books?.length>0">
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Book Name</th>
+        <th scope="col">Author Name</th>
+        <th scope="col">Issued</th>
+        <th scope="col">Issued To</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let book of books, let i=index">
+        <td>{{ book.bookName }}</td>
+        <td>{{ book.authorName }}</td>
+        <td>{{ book.issued }}</td>
+        <td>{{ book.issuedTo }}</td>
+        <td>
+
+          <button type="button" class="btn btn-primary" (click)="isEditButtonClicked(i)"
+            style="margin-right:2rem">Edit</button>
+          <button type="button" class="btn btn-danger" (click)=deleteBook(book.bookId)>Delete</button>
+          <form *ngIf="book?.edit" (ngSubmit)="updateBook(book)">
+            <div class="form-group">
+              <label for="bookName">Book Name</label>
+              <input type="text" class="form-control" id="bookName" required [(ngModel)]="book.bookName"
+                name="bookName">
+            </div>
+            <div class="form-group">
+              <label for="authorName">Author Name</label>
+              <input type="text" class="form-control" id="authorName" required [(ngModel)]="book.authorName"
+                name="authorName">
+            </div>
+            <div class="form-group">
+              <label>Issued</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="issued" id="issuedYes" [checked]="book.issued"
+                  value="true" (click)="checkIssued(book,true)">
+                <label class="form-check-label" for="issuedYes">Yes</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="issued" id="issuedNo" [checked]="!book.issued"
+                  value="false" (click)="checkIssued(book,false)">
+                <label class="form-check-label" for="issuedNo">No</label>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="book.issued">
+              <label for="issuedTo">Issued To</label>
+              <input type="text" class="form-control" id="issuedTo" required [(ngModel)]="book.issuedTo"
+                name="issuedTo">
+            </div>
+            <button type="submit" class="btn btn-primary"
+              [disabled]="book.issued && (!book?.issuedTo || book?.issuedTo?.length==0)">Save</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

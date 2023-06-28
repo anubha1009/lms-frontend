@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+.cursor-p{
+    cursor: pointer;
+}
+.container-box{
+    border: 1px solid #d67070ab;
+    border-radius: 10px;
+}

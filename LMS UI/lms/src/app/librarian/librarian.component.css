@@ -1,0 +1,7 @@
+.max-width-25{
+    max-width: 25 rem;
+}
+.container-box{
+    border: 1px solid #d67070ab;
+    border-radius: 10px;
+}
